@@ -12,4 +12,4 @@ The NCBI Pathogens detection system contains comprehensive information on bacter
 
 The [system](https://www.ncbi.nlm.nih.gov/pathogens/about/) helps public health researchers to identify transmission chains in potential foodborne illness outbreaks by clustering related pathogen genome sequences and allows them to track resistance genes by providing information on antimicrobial resistance, stress response, and virulence genes found in bacterial genomic sequences using AMRFinderPlus. 
 
-For complete dataset, [see](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing)
+For complete dataset, see the [link](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing).
