@@ -17,6 +17,10 @@ data.USA <- project.data %>%
 # replace "" with NA
 data.USA[data.USA == ""] <- NA
 
+
+# obtain years
+data.USA$year <- as.numeric(substr(data.USA$collection.date, 1, 4))
+
 # re encode categories for isolation source
 data.USA <- data.USA %>% 
   mutate(isolation.bin = case_when(
