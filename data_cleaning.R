@@ -1,7 +1,7 @@
 ########################### PHP 2550 Data Cleansing ###########################
 
 # Read in the data
-project.data <- read.csv("~/Desktop/fall 2022/PHP 2550 [PDA]/project/merged.data.csv")
+project.data <- read.csv("merged.data.csv")
 
 # create function to find serotype using the computed types column
 extract_serotype <- function(computed_type_str) {
@@ -16,5 +16,5 @@ project.data$Serotype <- sapply(project.data$computed_types, extract_serotype)
 
 # write data to a csv file
 write.csv(project.data,
-          "~/Desktop/fall 2022/PHP 2550 [PDA]/project/data_complete.csv",
+          "data_complete.csv",
           row.names = TRUE)
