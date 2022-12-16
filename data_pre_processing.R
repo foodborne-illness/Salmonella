@@ -304,29 +304,31 @@ clinical.USA$snp8 <- ifelse(top10.snp[8] == clinical.USA$snp.cluster, 1, 0)
 clinical.USA$snp9 <- ifelse(top10.snp[9] == clinical.USA$snp.cluster, 1, 0)
 clinical.USA$snp10 <- ifelse(top10.snp[10] == clinical.USA$snp.cluster, 1, 0)
 
-############################## TEST/TRAIN SPLIT ###############################
-# Create training data set: 2013-01 to 2017-08
+
+############################ TS Plot #########################
+# Summarize enteritidis cases by year and month
+enteritidis.case <- clinical.USA %>%
+  filter(!is.na(time)) %>%
+  group_by(year, month) %>%
+  summarise(count = n())
+
+# Create time series plot
+tsplot <- ggplot(enteritidis.case, aes(x=time, y=count)) +
+  geom_line() +
+  labs(title = "Clinical counts of Salmonella Enteritidis from 2010 to 2020", 
+       x = "Time (Year-Month)", y = "Counts")
+
+################### Data For modeling ############################
+# Split train and test data
 training.data <- clinical.USA %>% 
   filter(year %in% c(2013:2016) & month != "" | 
            year == 2017 & month %in% c("01", "02", "03", "04", "05",
                                        "06", "07", "08"))
-
-# Create test data set: 2017-09 to 2018-02
 test.data <- clinical.USA %>% 
   filter(year == 2017 & month %in% c("09", "10", "11", "12") |
            year == 2018 & month %in% c("01","02"))
 
-
-# Prepare design matrix
-clinical.M <- training.data %>% 
-  group_by(year, month) %>% 
-  summarize(n = n()) %>% 
-  arrange(-desc(year))
-
-# Create indicator vector for month
-v.0 <- vector("numeric", length = 12)
-m.data <- as.numeric(clinical.M$month)
-
+################### Preparation of design matrix ############################
 I.month <- function(month) {
   #' Returns a vector of indicator values corresponding to month
   #' @param month, month
@@ -335,70 +337,116 @@ I.month <- function(month) {
   return(v.0)
 }
 
-# Create matrix of indicator variables for month
-month.mat <- t(sapply(m.data, I.month))
-colnames(month.mat) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-datalen <- length(m.data)
+create_design_mat <- function(df){
+  #' Function to prepare design matrix
+  #' @param dataframe, dataframe
+  #' return clinical.output, design matrix for modeling
+  
+  clinical.M <- df %>% 
+    group_by(year, month) %>% 
+    summarize(n = n()) %>% 
+    arrange(-desc(year))
+  
+  # Create indicator vector for month
+  v.0 <- vector("numeric", length = 12)
+  m.data <- as.numeric(clinical.M$month)
+  
+  # Create matrix of indicator variables for month
+  month.mat <- t(sapply(m.data, I.month))
+  colnames(month.mat) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  datalen <- length(m.data)
+  
+  clinical.MRSG <- df %>% 
+    group_by(year, month) %>% 
+    summarize(n = n(),
+              p.AB = mean(amr.AB),
+              p.gnAB = mean(amr.gnAB),
+              p.bAB = mean(amr.bAB),
+              p.gyAB = mean(amr.gyAB), 
+              p.ggAB = mean(amr.ggAB),
+              p.snp1 = mean(snp1),
+              p.snp2 = mean(snp2),
+              p.snp3 = mean(snp3),
+              p.snp4 = mean(snp4),
+              p.snp5 = mean(snp5),
+              p.snp6 = mean(snp6),
+              p.snp7 = mean(snp7),
+              p.snp8 = mean(snp8),
+              p.snp9 = mean(snp9),
+              p.snp10 = mean(snp10),
+              p.stress1 = mean(stress.1),
+              p.stress2 = mean(stress.2),
+              p.stress3 = mean(stress.3),
+              p.stress4 = mean(stress.4),
+              p.stress5 = mean(stress.5))
+  
+  # Prepare design matrix by including proportions for region
+  regions <- df %>% 
+    group_by(year, month, region) %>%
+    summarize(n = n()) %>% 
+    pivot_wider(names_from = region, values_from = n, values_fill = 0) %>% 
+    ungroup() %>% 
+    select(-c(year, month))
+  total <- apply(regions, 1, sum)
+  regions.pct <- regions / total
+  
+  # Create data frame with year, month, proportion by amr genotype
+  # and snp cluster, and counts by region
+  clinical.MRSG <- data.frame(X = rep(1, datalen), 
+                              clinical.MRSG, regions.pct, month.mat)
+  
+  clinical.source <- df %>% 
+    group_by(year, month, clinical.bins) %>%
+    summarize(n = n()) %>% 
+    pivot_wider(names_from = clinical.bins,
+                values_from = n, values_fill = 0) %>% 
+    ungroup() %>% 
+    summarize(Blood = Blood,
+              Feces = Feces,
+              Other = other + Abscess)
+  n <- df %>% 
+    group_by(year, month) %>% 
+    summarize(n = n()) %>% pull(n)
+  clinical.source <- clinical.source / n
+  
+  
+  step.2013 <- df %>% 
+    group_by(year, month) %>% 
+    summarize(n = n()) %>% 
+    mutate(step.2013 = as.numeric(year) - 2013) %>% 
+    ungroup() %>% 
+    select(step.2013)
+  
+  # Use this data 
+  clinical.output <- data.frame(clinical.MRSG, clinical.source, step.2013)
+  
+  return(clinical.output)
+}
 
-# Obtain proportions based on the presence of AMR genotype clusters, SNP
-# clusters, and stress genotypes
-clinical.MRSG <- training.data %>% 
-  group_by(year, month) %>% 
-  summarize(n = n(),
-            p.AB = mean(amr.AB),
-            p.gnAB = mean(amr.gnAB),
-            p.bAB = mean(amr.bAB),
-            p.gyAB = mean(amr.gyAB), 
-            p.ggAB = mean(amr.ggAB),
-            p.snp1 = mean(snp1),
-            p.snp2 = mean(snp2),
-            p.snp3 = mean(snp3),
-            p.snp4 = mean(snp4),
-            p.snp5 = mean(snp5),
-            p.snp6 = mean(snp6),
-            p.snp7 = mean(snp7),
-            p.snp8 = mean(snp8),
-            p.snp9 = mean(snp9),
-            p.snp10 = mean(snp10),
-            p.stress1 = mean(stress.1),
-            p.stress2 = mean(stress.2),
-            p.stress3 = mean(stress.3),
-            p.stress4 = mean(stress.4),
-            p.stress5 = mean(stress.5))
+# Obtain the design matrix associated with the training data
+clinical.train <- create_design_mat(training.data)
 
-# Prepare design matrix by including proportions for region
-regions <- training.data %>% 
-  group_by(year, month, region) %>%
-  summarize(n = n()) %>% 
-  pivot_wider(names_from = region, values_from = n, values_fill = 0) %>% 
-  ungroup() %>% 
-  select(-c(year, month))
-total <- apply(regions, 1, sum)
-regions.pct <- regions / total
+# Obtain the design matrix associated with the test data
+clinical.test <- create_design_mat(test.data)
 
-# Create data frame with year, month, proportion by AMR genotype cluster, SNP
-# cluster, region, and indicator for month
-clinical.MRSG <- data.frame(X = rep(1, datalen), clinical.MRSG,
-                            regions.pct, month.mat)
+################## Other Functions ##################
+# Observed values for counts of cases
+Y <- clinical.train$n
+rmse <- function(model) {
+  #' Function to calculate rMSE
+  #' @param model, model object that predicted values are obtained from
+  #' return rMSE, MSE calculated from predicted values obtained from model
+  y.hat <- fitted(model)
+  rmse <- sqrt(sum((y.hat - Y)^2) / sum(Y))
+  return(rmse)
+}
 
-# Obtain counts by clinical source by year and month in wide format
-clinical.source <- training.data %>% 
-  group_by(year, month, clinical.bins) %>%
-  summarize(n = n()) %>% 
-  pivot_wider(names_from = clinical.bins, 
-              values_from = n, values_fill = 0) %>% 
-  ungroup() %>% 
-  summarize(Blood = Blood,
-            Feces = Feces,
-            Other = other + Abscess)
-
-n <- training.data %>% 
-  group_by(year, month) %>% 
-  summarize(n = n()) %>% pull(n)
-
-clinical.source <- clinical.source / n
-
-# Create data frame with year, month, proportion by AMR genotype cluster, SNP
-# cluster, region, indicator for month, and clinical source
-clinical.train <- data.frame(clinical.MRSG, clinical.source)
+nrmse <- function(model) {
+  #' Function to calculate normalized rMSE
+  #' @param model, model object that predicted values are obtained from
+  #' return nrmse, nomalized rMSE calculated from predicted values obtained from model
+  y.hat <- fitted(model)
+  nrmse <- sqrt(mean(y.hat-Y)^2)/sd(Y)
+  return(nrmse)
+}
