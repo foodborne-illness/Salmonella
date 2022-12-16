@@ -10,7 +10,7 @@ We are using the Salmonella Enteritidis data from [National Center for Biotechno
 
 The NCBI Pathogens detection system contains comprehensive information on bacterial and fungal pathogen genomic sequences. Numerous sequenced samples from clinical cases and environmental and food sources are submitted by public health institutions and researchers worldwide to NCBI for active, real-time monitoring of pathogens and potential foodborne illness outbreaks. NCBI analyzes and compares these sequences to those in the NCBI Pathogens detection database. By identifying the related sequences, the NCBI can detect closely related isolates and thus investigate their concerning potential pathogen-related outbreaks.
 
-The [system](https://www.ncbi.nlm.nih.gov/pathogens/about/) helps public health researchers to identify transmission chains in potential foodborne illness outbreaks by clustering related pathogen genome sequences and allows them to track resistance genes by providing information on antimicrobial resistance, stress response, and virulence genes found in bacterial genomic sequences using AMRFinderPlus. 
+The [NCBI system](https://www.ncbi.nlm.nih.gov/pathogens/about/) helps public health researchers to identify transmission chains in potential foodborne illness outbreaks by clustering related pathogen genome sequences and allows them to track resistance genes by providing information on antimicrobial resistance, stress response, and virulence genes found in bacterial genomic sequences using AMRFinderPlus. 
 
 ## About this Repository
 
