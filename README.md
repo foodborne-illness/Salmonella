@@ -1,12 +1,12 @@
-# Salmonella-enteric
+# Salmonella - Enteritidis
 
 Foodborne illnesses caused by a variety of risk factors, such as contaminated foods and beverages, inadequate cooking, improper hot/cold holding temperatures, contaminated equipment, and poor personal hygiene, continue to pose a major global public health problem. Of over 2500 Salmonella serotypes identified, serovars Enteritidis, Newport, Typhimurium, Typhi, Choleraesuis, Paratyphi A, and Paratyphi C from Salmonella subspecies I are responsible for most human Salmonella infections.
 
-This porject aims to identify trends and associated high-risk genotypes in Salmonella-relatedfoodborne illness outbreaks in the US and predict clinical cases with identifiedgenotypes, seasonality, and regionality. Generalized linear autoregressive moving average (GLARMA) model was utilized to predict the counts of clinically exposed cases of Salmonella Enteritidis in the US, with a combination of baseline predictors including high-risk AMR genotypes, high-risk stress genotypes, top ten SNP clusters with most isolates, human-related sources and US regions. 
+This project aims to identify trends and associated high-risk genotypes in Salmonella-relatedfoodborne illness outbreaks in the US and predict clinical cases with identifiedgenotypes, seasonality, and regionality. Generalized linear autoregressive moving average (GLARMA) model was utilized to predict the counts of clinically exposed cases of Salmonella Enteritidis in the US, with a combination of baseline predictors including high-risk AMR genotypes, high-risk stress genotypes, top ten SNP clusters with most isolates, human-related sources and US regions. 
 
 ## Data Source and Collection
 
-We are using the Salmonella entreica data from [National Center for Biotechnology Information’s(NCBI) Pathogens Detection database](https://www.ncbi.nlm.nih.gov/pathogens/) in our study to explore the high-risk isolates of salmonella and predict the probability of different serovars of salmonella most likely to cause an outbreak at specific times. 
+We are using the Salmonella Enteritidis data from [National Center for Biotechnology Information’s(NCBI) Pathogens Detection database](https://www.ncbi.nlm.nih.gov/pathogens/) in our study to explore the high-risk isolates of salmonella and predict the probability of different serovars of salmonella most likely to cause an outbreak at specific times. 
 
 The NCBI Pathogens detection system contains comprehensive information on bacterial and fungal pathogen genomic sequences. Numerous sequenced samples from clinical cases and environmental and food sources are submitted by public health institutions and researchers worldwide to NCBI for active, real-time monitoring of pathogens and potential foodborne illness outbreaks. NCBI analyzes and compares these sequences to those in the NCBI Pathogens detection database. By identifying the related sequences, the NCBI can detect closely related isolates and thus investigate their concerning potential pathogen-related outbreaks.
 
