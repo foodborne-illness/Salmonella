@@ -12,17 +12,14 @@ The NCBI Pathogens detection system contains comprehensive information on bacter
 
 The [system](https://www.ncbi.nlm.nih.gov/pathogens/about/) helps public health researchers to identify transmission chains in potential foodborne illness outbreaks by clustering related pathogen genome sequences and allows them to track resistance genes by providing information on antimicrobial resistance, stress response, and virulence genes found in bacterial genomic sequences using AMRFinderPlus. 
 
-For complete dataset, see the [link](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing).
-
-
 ## About this repository
 
-\item Details about the modeling process analysis can be found in the  `Report` folder.
+- Details about the modeling process analysis can be found in the  `Report` folder.
 
-** R codes are written in R Studio and stored in the `EDA` and `Modeling` folder.
+- R codes are written in R Studio and stored in the `EDA` and `Modeling` folder.
 
-** The `Data` folder includes the meta data from NCBI. For complete dataset we use for modeling, see the [link](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing).
+- The `Data` folder includes the meta data from NCBI. For complete dataset we use for modeling, see the [link](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing).
 
-** The `Plots` folder contains figures for the report.
+- The `Plots` folder contains figures for the report.
 
-** Other supplementary materials like the variable descriptions are provided in `supplement` folder.
+- Other supplementary materials like the variable descriptions are provided in `supplement` folder.
