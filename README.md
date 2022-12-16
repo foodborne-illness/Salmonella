@@ -17,7 +17,7 @@ For complete dataset, see the [link](https://drive.google.com/file/d/1kmlia5vTlS
 
 ## About this repository
 
-** Details about the modeling process analysis can be found in the  `Report` folder.
+\item Details about the modeling process analysis can be found in the  `Report` folder.
 
 ** R codes are written in R Studio and stored in the `EDA` and `Modeling` folder.
 
