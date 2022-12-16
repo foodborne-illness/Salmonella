@@ -14,7 +14,7 @@ The [NCBI system](https://www.ncbi.nlm.nih.gov/pathogens/about/) helps public he
 
 ## About this Repository
 
-- R codes are written in R Studio and stored in the `EDA` and `Modeling` folder.
+- R codes are written in R Studio and stored in the `Data preparation` and `Modeling` folder.
 
 - The `Data` folder includes the meta data from NCBI. For complete dataset we use for modeling, see the [link](https://drive.google.com/file/d/1kmlia5vTlS_2r9Hp5TpCGLK7Uq3U02_p/view?usp=sharing).
 
